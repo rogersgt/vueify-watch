@@ -1,0 +1,17 @@
+{
+  "name": "vueify-watch",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "vueify-watch": "compile.js"
+  },
+  "preferGlobal": true,
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^13.1.1",
+    "colors": "^1.1.2",
+    "fs": "0.0.1-security",
+    "vueify": "^9.4.0"
+  }
+}
