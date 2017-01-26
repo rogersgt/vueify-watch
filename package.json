@@ -1,9 +1,14 @@
 {
   "name": "vueify-watch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "bin": {
     "vueify-watch": "compile.js"
+  },
+  "scripts": {
+    "start": "npm run-script build",
+    "build": "browserify compile.js -o index.js",
+    "poststart": "npm pack"
   },
   "preferGlobal": true,
   "author": "",
@@ -13,5 +18,8 @@
     "colors": "^1.1.2",
     "fs": "0.0.1-security",
     "vueify": "^9.4.0"
+  },
+  "devDependencies": {
+    "browserify": "^13.3.0"
   }
 }

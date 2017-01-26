@@ -2,37 +2,37 @@
 const userArgs = process.argv.slice(2);
 const fs = require('fs');
 const colors = require('colors');
-const exec = require('child_process').exec;
+const watchFile = require('./library/watch');
 
-const app = userArgs[0];
-const build = userArgs[1];
+// ============ Input Output Files / No watch.json ============== //
+if (userArgs[0] && userArgs[1]) {
 
-const cmd = 'browserify -t vueify -e ' + app + ' -o ' + build;
+  const app = userArgs[0];
+  const build = userArgs[1];
+  const cmd = 'browserify -t vueify -e ' + app + ' -o ' + build;
 
-const watchFile = (path) => {
-  fs.watch(path, {encoding: 'buffer'}, (eventType, fileName) => {
-    var child = exec(cmd, function(err, stdout, stderr) {
-      if (err) {
-        console.log('Error compiling vue files in '.red + path + ': ' + err);
-      } else {
-        console.log('Compiling vue.js files into '.green + build + '...'.green);
-      }
-    });
-  });
-};
+  watchFile(app,cmd);
 
-if (fs.existsSync('./watch.json')) {
+// ================ watch.json Included / No Arguments ========== //
+} else if (fs.existsSync('./watch.json')) {
 
-  const watchData = fs.readFileSync('./watch.json');
-  const watch = JSON.parse(watchData);
+  if (userArgs[0]) {
+    console.log('vueify-watch error: ');
+    console.log('Do not specify file path arguments with a watch.json file.'.red);
+  } else {
+    const watchData = fs.readFileSync('./watch.json');
+    const watch = JSON.parse(watchData);
 
-  for (var i = 0; i < watch.vue.length; i++) {
-    watchFile(watch.vue[i]);
+    for (var i = 0; i < watch.vue.length; i++) {
+      const cmd = 'browserify -t vueify -e ' + watch.main + ' -o index.js';
+      watchFile(watch.vue[i],cmd);
+    }
   }
 
+// ========================= Error =============================== //
 } else {
-  watchFile(app);
+  console.log('vueify-watch error: ');
+  console.log('Please include a watch.json file OR an Input file and an Output file.'.red);
+  console.log('Use: ' + 'vueify-watch main.js index.js'.cyan);
+  console.log('Or use: ' + 'vueify-watch'.cyan + ' with a watch.json configuration.');
 }
-
-
-
