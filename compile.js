@@ -20,11 +20,15 @@ if (userArgs[0] && userArgs[1]) {
     console.log('vueify-watch error: ');
     console.log('Do not specify file path arguments with a watch.json file.'.red);
   } else {
+    
     const watchData = fs.readFileSync('./watch.json');
     const watch = JSON.parse(watchData);
+    let output = 'index.js';
+
+    if (watch.output) output = watch.output;
 
     for (var i = 0; i < watch.vue.length; i++) {
-      const cmd = 'browserify -t vueify -e ' + watch.main + ' -o index.js';
+      const cmd = 'browserify -t vueify -e ' + watch.main + ' -o' + output;
       watchFile(watch.vue[i],cmd);
     }
   }

@@ -24,9 +24,11 @@ if (userArgs[0] && userArgs[1]) {
   } else {
     const watchData = fs.readFileSync('./watch.json');
     const watch = JSON.parse(watchData);
+    const output = 'index.js';
+    if (watch.output) output = watch.output;
 
     for (var i = 0; i < watch.vue.length; i++) {
-      const cmd = 'browserify -t vueify -e ' + watch.main + ' -o index.js';
+      const cmd = 'browserify -t vueify -e ' + watch.main + ' -o' + output;
       watchFile(watch.vue[i],cmd);
     }
   }
@@ -44,6 +46,7 @@ if (userArgs[0] && userArgs[1]) {
 const exec = require('child_process').exec;
 const fs = require('fs');
 
+// 
 module.exports = (path,cmd) => {
   fs.watch(path, {encoding: 'buffer'}, (eventType, fileName) => {
     var child = exec(cmd, function(err, stdout, stderr) {
